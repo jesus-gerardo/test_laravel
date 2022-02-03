@@ -3,6 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AirlinesController;
+use App\Http\Controllers\AirportsController;
+use App\Http\Controllers\FlightsController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +19,20 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
+// Route::get('login', [AuthController::class, 'login']);
+Route::post('login', [AuthController::class, 'login']);
+Route::middleware(['auth:sanctum'])->get('logout', [AuthController::class, 'logout']);
+
+Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+Route::resource('airlines', AirlinesController::class);
+Route::resource('airports', AirportsController::class);
+
+Route::get('fligths/catalogue', [FlightsController::class, 'catalogue']);
+Route::resource('fligths', FlightsController::class);
+
+
+
