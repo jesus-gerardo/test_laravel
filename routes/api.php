@@ -27,12 +27,10 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-Route::resource('airlines', AirlinesController::class);
-Route::resource('airports', AirportsController::class);
-
-Route::get('fligths/catalogue', [FlightsController::class, 'catalogue']);
-Route::resource('fligths', FlightsController::class);
+Route::middleware(['auth:sanctum'])->resource('airlines', AirlinesController::class);
+Route::middleware(['auth:sanctum'])->resource('airports', AirportsController::class);
+Route::middleware(['auth:sanctum'])->get('fligths/catalogue', [FlightsController::class, 'catalogue']);
+Route::middleware(['auth:sanctum'])->resource('fligths', FlightsController::class);
 
 
 
