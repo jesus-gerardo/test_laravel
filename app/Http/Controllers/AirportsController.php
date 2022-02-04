@@ -109,8 +109,18 @@ class AirportsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy($id){
+        try{
+            $airport = Airport::findOrFail($id);
+            $airport->delete();
+            return response()->json([
+                'success' => true
+            ], 200);
+        }catch(Exception $e){
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 200);
+        }
     }
 }

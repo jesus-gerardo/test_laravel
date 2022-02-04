@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 
 class FlightsController extends Controller
 {
+
+    public function __construct(){
+        // $this->authorizeResource('flight');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -18,8 +22,7 @@ class FlightsController extends Controller
      */
     public function index(){
         try{
-            $airlines = Airlines::get();
-            $airports = Airport::get();
+            // $this->authorize('view');
             $fligth = Flights::with([
                 'departure',
                 'destination',
@@ -39,6 +42,7 @@ class FlightsController extends Controller
 
     public function catalogue(){
         try{
+            // $this->authorize('view');
             $airlines = Airlines::get();
             $airports = Airport::get();
             return response()->json([
@@ -48,8 +52,8 @@ class FlightsController extends Controller
             ], 200);
         }catch(Exception $e){
             return response()->json([
-                'airline' => $airlines,
-                'airports' => $airports,
+                'airline' => [],
+                'airports' => [],
                 'error' => $e->getMessage()
             ], 200);
         }  
@@ -70,6 +74,7 @@ class FlightsController extends Controller
      */
     public function store(FlightsRequest $request){
         try{
+            // $this->authorize('create');
             $fligth = new Flights();
             $fligth->code = $request->code;
             $fligth->type = $request->type;
@@ -117,6 +122,7 @@ class FlightsController extends Controller
      */
     public function update(FlightsRequest $request, $id){
         try{ 
+            // $this->authorize('update');
             $fligth = Flights::findOrFail($id);
             $fligth->code = $request->code;
             $fligth->type = $request->type;
@@ -144,8 +150,18 @@ class FlightsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
+    public function destroy($id){
+        try{
+            $fligth = Flights::findOrFail($id);
+            $fligth->delete();
+            return response()->json([
+                'success' => true
+            ], 200);
+        }catch(Exception $e){
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 200);
+        }
     }
 }

@@ -108,9 +108,16 @@ class AirlinesController extends Controller{
      */
     public function destroy($id){
         try{
-            return response()->json([], 200);
+            $airline = Airlines::findOrFail($id);
+            $airline->delete();
+            return response()->json([
+                'success' => true
+            ], 200);
         }catch(Exception $e){
-            return response()->json([], 200);
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage()
+            ], 200);
         }
     }
 }
